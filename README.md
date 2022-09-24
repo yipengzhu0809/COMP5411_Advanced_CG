@@ -107,3 +107,6 @@ util. cpp: Some mathematical operations functions
        OneRingHEdge ring;
     };
     ```
+
+* ![Explicit Laplacian Smoothing](/Users/eason/Desktop/HKUST/git/COMP5411_Advanced_CG/doc/Explicit Laplacian Smoothing.png)
+* ![Weighting schemes](/Users/eason/Desktop/HKUST/git/COMP5411_Advanced_CG/doc/Weighting schemes.png)

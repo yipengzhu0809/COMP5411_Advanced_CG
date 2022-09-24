@@ -703,7 +703,7 @@ void Mesh::umbrellaSmooth(bool cotangentWeights) {
 	/*====== Programming Assignment 1 ======*/
     float lambda=1;
     const int numVertices = mVertexList.size();
-    Eigen::MatrixX3f newPositions(numVertices, 3);
+    Eigen::MatrixX3f newPositions(numVertices, 3); //X3f means typedef Matrix< float, Dynamic, 3 > 	Eigen::MatrixX3f
 
     if (cotangentWeights) {
         /**********************************************/
@@ -767,7 +767,7 @@ void Mesh::umbrellaSmooth(bool cotangentWeights) {
             while (curr = orv.nextVertex()) {
                 sumOfNeighbors += curr->position();
             }
-            Eigen::Vector3f delta = sumOfNeighbors / vert->valence() - position;
+            Eigen::Vector3f delta = sumOfNeighbors / vert->valence() - position; //valence return the number of adj vertex
             Eigen::Vector3f newPosition = position + lambda * delta;
             newPositions.row(i) = newPosition;
         }
