@@ -108,5 +108,5 @@ util. cpp: Some mathematical operations functions
     };
     ```
 
-* ![Explicit Laplacian Smoothing](doc/Explicit Laplacian Smoothing.png)
-* ![Weighting schemes](doc/Weighting schemes.png)
+* ![Explicit Laplacian Smoothing](https://github.com/yipengzhu0809/COMP5411_Advanced_CG/blob/main/doc/Explicit%20Laplacian%20Smoothing.png)
+* ![Weighting schemes](https://github.com/yipengzhu0809/COMP5411_Advanced_CG/blob/main/doc/Weighting%20schemes.png)
