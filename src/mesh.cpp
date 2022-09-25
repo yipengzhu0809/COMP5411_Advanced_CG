@@ -789,64 +789,153 @@ void Mesh::implicitUmbrellaSmooth(bool cotangentWeights) {
 	/*====== Programming Assignment 1 ======*/
 
 	/* A sparse linear system Ax=b solver using the conjugate gradient method. */
-	auto fnConjugateGradient = [](const Eigen::SparseMatrix< float >& A,
-	                              const Eigen::VectorXf& b,
-	                              int maxIterations,
-	                              float errorTolerance,
-	                              Eigen::VectorXf& x)
-	{
-		/**********************************************/
-		/*          Insert your code here.            */
-		/**********************************************/
-		/*
-		/* Params:
-		/*  A:
-		/*  b:
-		/*  maxIterations:	Max number of iterations
-		/*  errorTolerance: Error tolerance for the early stopping condition
-		/*  x:				Stores the final solution, but should be initialized.
-		/**********************************************/
-		/*
-		/* Step 1: Implement the biconjugate gradient
-		/* method.
-		/* Hint: https://en.wikipedia.org/wiki/Biconjugate_gradient_method
-		/**********************************************/
-	};
+    auto fnConjugateGradient = [](const Eigen::SparseMatrix< float >& A,
+                                  const Eigen::VectorXf& b,
+                                  int maxIterations,
+                                  float errorTolerance,
+                                  Eigen::VectorXf& x)
+    {
+        /**********************************************/
+        /*          Insert your code here.            */
+        /**********************************************/
+        /*
+        /* Params:
+        /*  A:
+        /*  b:
+        /*  maxIterations:	Max number of iterations
+        /*  errorTolerance: Error tolerance for the early stopping condition
+        /*  x:				Stores the final solution, but should be initialized.
+        /**********************************************/
+        /*
+        /* Step 1: Implement the biconjugate gradient
+        /* method.
+        /* Hint: https://en.wikipedia.org/wiki/Biconjugate_gradient_method
+        /**********************************************/
+        //M=E
+        Eigen::SparseMatrix<float> At = A.transpose();
+        Eigen::VectorXf r, rc, p, pc;
+        r = rc = p = pc = b - A * x;
+        double prevDotProd = r.dot(rc);
+        for (int i = 0; i < maxIterations; ++i) {
+            double alpha = prevDotProd / ((A * p).dot(pc));
+            x += alpha * p;
+            Eigen::VectorXf error = A * x - b;
+            double ratio = error.norm() / b.norm();
+            if (ratio < errorTolerance) {
+                break;
+            }
+            r -= alpha * (A * p);
+            rc -= alpha * (At * pc);
+            double currDotProd = r.dot(rc);
+            double beta = currDotProd / prevDotProd;
+            p = r + beta * p;
+            pc = rc + beta * pc;
+            prevDotProd = currDotProd;
+        }
+    };
 
-	/* IMPORTANT:
-	/* Please refer to the following link about the sparse matrix construction in Eigen. */
-	/* http://eigen.tuxfamily.org/dox/group__TutorialSparse.html#title3 */
+    /* IMPORTANT:
+    /* Please refer to the following link about the sparse matrix construction in Eigen. */
+    /* http://eigen.tuxfamily.org/dox/group__TutorialSparse.html#title3 */
+    int numVertices = mVertexList.size();
+    Eigen::SparseMatrix<float> A(numVertices, numVertices);
+    Eigen::MatrixX3f oldPositions(numVertices, 3);
+    for (Vertex *vert : mVertexList) {
+        const Eigen::Vector3f &position = vert->position();
+        int i = vert->index();
+        oldPositions.row(i) = position;
+    }
+    float lambda = 1;
+    if (cotangentWeights) {
+        /**********************************************/
+        /*          Insert your code here.            */
+        /**********************************************/
+        /*
+        /* Step 2: Implement the cotangent weighting
+        /* scheme for implicit mesh smoothing. Use
+        /* the above fnConjugateGradient for solving
+        /* sparse linear systems.
+        /*
+        /* Hint:
+        /* It is advised to double type to store the
+        /* weights to avoid numerical issues.
+        /**********************************************/
+        for (Vertex *vert : mVertexList) {
+            const Eigen::Vector3f &position = vert->position();
+            OneRingVertex orv(vert);
+            Vertex *curr = nullptr;
+            std::vector<Vertex *> adjVertices;
+            while (curr = orv.nextVertex()) {
+                adjVertices.push_back(curr);
+            }
+            int n = adjVertices.size();
+            int i = vert->index();
+            if (n > 2) {
+                std::vector<double> weights(n);
+                double weightSum = 0;
+                for (int k = 0; k < n; ++k) {
+                    const Eigen::Vector3f &prev = adjVertices[k]->position();
+                    const Eigen::Vector3f &curr = adjVertices[(k + 1) % n]->position();
+                    const Eigen::Vector3f &next = adjVertices[(k + 2) % n]->position();
+                    double cot1 = triangleCot(position, prev, curr);
+                    double cot2 = triangleCot(position, next, curr);
+                    double weight = 0.5 * (cot1 + cot2);
+                    weights[(k + 1) % n] = weight;
+                    weightSum += weight;
+                }
 
-	if (cotangentWeights) {
-		/**********************************************/
-		/*          Insert your code here.            */
-		/**********************************************/
-		/*
-		/* Step 2: Implement the cotangent weighting
-		/* scheme for implicit mesh smoothing. Use
-		/* the above fnConjugateGradient for solving
-		/* sparse linear systems.
-		/*
-		/* Hint:
-		/* It is advised to double type to store the
-		/* weights to avoid numerical issues.
-		/**********************************************/
+                for (int k = 0; k < n; ++k) {
+                    int j = adjVertices[k]->index();
+                    A.insert(i, j) = -lambda * weights[k] / weightSum;
+                }
+            }
+            A.insert(i, i) = 1 + lambda;
+        }
 
+    }
+    else {
+        /**********************************************/
+        /*          Insert your code here.            */
+        /**********************************************/
+        /*
+        /* Step 3: Implement the uniform weighting
+        /* scheme for implicit mesh smoothing. Use
+        /* the above fnConjugateGradient for solving
+        /* sparse linear systems.
+        /**********************************************/
+        for (Vertex *vert : mVertexList) {
+            OneRingVertex orv(vert);
+            Vertex *curr = nullptr;
+            std::vector<Vertex *> adjVertices;
+            while (curr = orv.nextVertex()) {
+                adjVertices.push_back(curr);
+            }
+            int i = vert->index();
+            int valence = adjVertices.size();
+            for (auto neighbor : adjVertices) {
+                int j = neighbor->index();
+                double weight = 1.0 / valence;
+                A.insert(i, j) = -lambda * weight;
+            }
+            A.insert(i, i) = 1 + lambda;
+        }
+    }
 
-	} else {
-		/**********************************************/
-		/*          Insert your code here.            */
-		/**********************************************/
-		/*
-		/* Step 3: Implement the uniform weighting
-		/* scheme for implicit mesh smoothing. Use
-		/* the above fnConjugateGradient for solving
-		/* sparse linear systems.
-		/**********************************************/
+    Eigen::MatrixX3f newPositions(numVertices, 3);
+    for (int d = 0; d < 3; ++d) {
+        Eigen::VectorXf x = Eigen::VectorXf::Zero(numVertices);
+        Eigen::VectorXf b = oldPositions.col(d);
+        fnConjugateGradient(A, b, 1000, 1e-6, x);
+        newPositions.col(d) = x;
+    }
 
-	}
+    for (Vertex *vert : mVertexList) {
+        int i = vert->index();
+        Eigen::Vector3f newPosition = newPositions.row(i);
+        vert->setPosition(newPosition);
+    }
 
-	/*====== Programming Assignment 1 ======*/
+    /*====== Programming Assignment 1 ======*/
 
 	computeVertexNormals();
 	// Notify mesh shaders
