@@ -114,8 +114,8 @@ util. cpp: Some mathematical operations functions
 * Implement Implicit Laplacian s
   * Corresponding function in the code is Mesh::implicitUmbrellaSmooth()
   * Implement both uniform weights and cotangent weights
-* ![Screen Shot 2022-09-25 at 10.49.07 AM](/Users/eason/Library/Application Support/typora-user-images/Screen Shot 2022-09-25 at 10.49.07 AM.png)
-* ![;](/Users/eason/Library/Application Support/typora-user-images/Screen Shot 2022-09-25 at 10.49.31 AM.png)
+* ![Screen Shot 2022-09-25 at 10.49.07 AM](https://github.com/yipengzhu0809/COMP5411_Advanced_CG/blob/main/doc/Implicit%20Laplacian%20Smoothing.png)
+* ![;](https://github.com/yipengzhu0809/COMP5411_Advanced_CG/blob/main/doc/matrix%20element%20of%20L.png)
 * Use Biconjugate gradient method to solve the linear system:
 
-![Screen Shot 2022-09-25 at 10.52.01 AM](/Users/eason/Library/Application Support/typora-user-images/Screen Shot 2022-09-25 at 10.52.01 AM.png)
+![Screen Shot 2022-09-25 at 10.52.01 AM](https://github.com/yipengzhu0809/COMP5411_Advanced_CG/blob/main/doc/Biconjugate%20gradient%20method.png)
