@@ -119,3 +119,51 @@ util. cpp: Some mathematical operations functions
 * Use Biconjugate gradient method to solve the linear system:
 
 ![Screen Shot 2022-09-25 at 10.52.01 AM](https://github.com/yipengzhu0809/COMP5411_Advanced_CG/blob/main/doc/Biconjugate%20gradient%20method.png)
+
+## Assignment 2
+
+* Implement the naïve laplacian surface editing scheme
+
+  * Build the matrix of the linear system for deformation and do factorization, in order to reuse and speed up in Deformer::deform()
+  * Use the following code to complement the factorization:
+
+  ```c++
+  if (systemMat.nonZeros() > 0) {
+     mCholeskySolver = new Eigen::SimplicialLDLT< Eigen::SparseMatrix< double > >();
+     mCholeskySolver->compute(systemMat);
+     if (mCholeskySolver->info() != Eigen::Success) {
+        // Decomposition failed
+        std::cout << "Sparse decomposition failed\n";
+     } else {
+        std::cout << "Sparse decomposition succeeded\n";
+     }
+  }
+  ```
+
+  * Use the following code to generate contingent weighting Laplacian corrdinates:
+
+  ```c++
+  for (int k = 0; k < n; ++k) {
+          const Eigen::Vector3f &prev = adjVertices[k]->position();
+          const Eigen::Vector3f &curr = adjVertices[(k + 1) % n]->position();
+          const Eigen::Vector3f &next = adjVertices[(k + 2) % n]->position();
+          double cot1 = triangleCot(vert->position(), prev, curr);
+          double cot2 = triangleCot(vert->position(), next, curr);
+          double weight = 0.5 * (cot1 + cot2);
+          weights[(k + 1) % n] = weight;
+          weightSum += weight;
+      }
+      Eigen::Vector3d delta_i = -vert->position().cast<double>();
+      for (int k = 0; k < n; ++k) {
+          int j = adjVertices[k]->index();
+          mA.insert(i, j) = weights[k] / weightSum;
+          delta_i += weights[k] / weightSum * adjVertices[k]->position().cast<double>();
+      }
+      mA.insert(i, i) = -1;
+      mB.row(i) = delta_i;
+  }
+  
+  for (int k = 0; k < numConstraints; ++k) {
+      int i = mRoiList[k]->index();
+      mA.insert(numVertices + k, i) = 1;
+  ```
