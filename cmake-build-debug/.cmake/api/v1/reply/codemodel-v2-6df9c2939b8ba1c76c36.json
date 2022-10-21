@@ -1,0 +1,146 @@
+{
+	"configurations" : 
+	[
+		{
+			"directories" : 
+			[
+				{
+					"build" : ".",
+					"childIndexes" : 
+					[
+						1
+					],
+					"hasInstallRule" : true,
+					"jsonFile" : "directory-.-Debug-7f034cd2b420eb75cbd1.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "2.8.12"
+					},
+					"projectIndex" : 0,
+					"source" : ".",
+					"targetIndexes" : 
+					[
+						0,
+						3,
+						4
+					]
+				},
+				{
+					"build" : "ext_build/glfw",
+					"childIndexes" : 
+					[
+						2
+					],
+					"jsonFile" : "directory-ext_build.glfw-Debug-dd5f9c259c97169ebfab.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "2.8.11.2"
+					},
+					"parentIndex" : 0,
+					"projectIndex" : 1,
+					"source" : "ext/glfw"
+				},
+				{
+					"build" : "ext_build/glfw/src",
+					"jsonFile" : "directory-ext_build.glfw.src-Debug-10027a41950b2bfcf99d.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "2.8.11.2"
+					},
+					"parentIndex" : 1,
+					"projectIndex" : 1,
+					"source" : "ext/glfw/src",
+					"targetIndexes" : 
+					[
+						1,
+						2
+					]
+				}
+			],
+			"name" : "Debug",
+			"projects" : 
+			[
+				{
+					"childIndexes" : 
+					[
+						1
+					],
+					"directoryIndexes" : 
+					[
+						0
+					],
+					"name" : "COMP5411Project",
+					"targetIndexes" : 
+					[
+						0,
+						3,
+						4
+					]
+				},
+				{
+					"directoryIndexes" : 
+					[
+						1,
+						2
+					],
+					"name" : "GLFW",
+					"parentIndex" : 0,
+					"targetIndexes" : 
+					[
+						1,
+						2
+					]
+				}
+			],
+			"targets" : 
+			[
+				{
+					"directoryIndex" : 0,
+					"id" : "COMP5411::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-COMP5411-Debug-11e9a603651b0bea8073.json",
+					"name" : "COMP5411",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 2,
+					"id" : "glfw::@2313550c3481759bc573",
+					"jsonFile" : "target-glfw-Debug-998d07553f2689ca42df.json",
+					"name" : "glfw",
+					"projectIndex" : 1
+				},
+				{
+					"directoryIndex" : 2,
+					"id" : "glfw_objects::@2313550c3481759bc573",
+					"jsonFile" : "target-glfw_objects-Debug-e1792c25e10322dcfe82.json",
+					"name" : "glfw_objects",
+					"projectIndex" : 1
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "nanogui::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-nanogui-Debug-c333c6512c6bb17d411c.json",
+					"name" : "nanogui",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "nanogui-obj::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-nanogui-obj-Debug-9499780dde74fbad501c.json",
+					"name" : "nanogui-obj",
+					"projectIndex" : 0
+				}
+			]
+		}
+	],
+	"kind" : "codemodel",
+	"paths" : 
+	{
+		"build" : "/Users/eason/Desktop/HKUST/git/COMP5411_Advanced_CG/cmake-build-debug",
+		"source" : "/Users/eason/Desktop/HKUST/git/COMP5411_Advanced_CG"
+	},
+	"version" : 
+	{
+		"major" : 2,
+		"minor" : 4
+	}
+}
